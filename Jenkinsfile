@@ -1,24 +1,6 @@
 pipeline {
   agent none
   stages {
-    stage('Build') {
-      agent { label 'dotnetcore21' }
-      steps {
-        sh "dotnet build"
-      }
-    }
-    stage('Build Image') {
-      agent { label 'base' }
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject("peopleapi") {
-              openshift.selector("bc", "peopleapi-bc").startBuild("--wait=true")
-            }
-          }
-        }
-      }
-    }
     stage('Scan Codebase') {
       agent { label 'sonar-dotnet' }
       steps {
